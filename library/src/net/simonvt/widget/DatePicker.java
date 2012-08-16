@@ -16,8 +16,12 @@
 
 package net.simonvt.widget;
 
-import net.simonvt.datepicker.R;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
+import net.simonvt.datepicker.R;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -39,11 +43,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 
 /**
  * This class is a widget for selecting a date. The date can be selected by a
@@ -174,6 +173,7 @@ public class DatePicker extends FrameLayout {
         inflater.inflate(layoutResourceId, this, true);
 
         NumberPicker.OnValueChangeListener onChangeListener = new NumberPicker.OnValueChangeListener() {
+            @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 updateInputState();
                 mTempDate.setTimeInMillis(mCurrentDate.getTimeInMillis());
@@ -214,6 +214,7 @@ public class DatePicker extends FrameLayout {
         // calendar view day-picker
         mCalendarView = (CalendarView) findViewById(R.id.calendar_view);
         mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int monthDay) {
                 setDate(year, month, monthDay);
                 updateSpinners();
@@ -288,6 +289,18 @@ public class DatePicker extends FrameLayout {
         if (am.isEnabled()) {
             setContentDescriptions();
         }
+    }
+
+    public NumberPicker getDaySpinner() {
+        return mDaySpinner;
+    }
+
+    public NumberPicker getMonthSpinner() {
+        return mMonthSpinner;
+    }
+
+    public NumberPicker getYearSpinner() {
+        return mYearSpinner;
     }
 
     /**
@@ -506,20 +519,20 @@ public class DatePicker extends FrameLayout {
         final int spinnerCount = order.length;
         for (int i = 0; i < spinnerCount; i++) {
             switch (order[i]) {
-                case DateFormat.DATE:
-                    mSpinners.addView(mDaySpinner);
-                    setImeOptions(mDaySpinner, spinnerCount, i);
-                    break;
-                case DateFormat.MONTH:
-                    mSpinners.addView(mMonthSpinner);
-                    setImeOptions(mMonthSpinner, spinnerCount, i);
-                    break;
-                case DateFormat.YEAR:
-                    mSpinners.addView(mYearSpinner);
-                    setImeOptions(mYearSpinner, spinnerCount, i);
-                    break;
-                default:
-                    throw new IllegalArgumentException();
+            case DateFormat.DATE:
+                mSpinners.addView(mDaySpinner);
+                setImeOptions(mDaySpinner, spinnerCount, i);
+                break;
+            case DateFormat.MONTH:
+                mSpinners.addView(mMonthSpinner);
+                setImeOptions(mMonthSpinner, spinnerCount, i);
+                break;
+            case DateFormat.YEAR:
+                mSpinners.addView(mYearSpinner);
+                setImeOptions(mYearSpinner, spinnerCount, i);
+                break;
+            default:
+                throw new IllegalArgumentException();
             }
         }
     }
@@ -660,7 +673,7 @@ public class DatePicker extends FrameLayout {
      * Updates the calendar view with the current date.
      */
     private void updateCalendarView() {
-         mCalendarView.setDate(mCurrentDate.getTimeInMillis(), false, false);
+        mCalendarView.setDate(mCurrentDate.getTimeInMillis(), false, false);
     }
 
     /**
